@@ -172,6 +172,8 @@ static void dmExtScanActHciReport(hciEvt_t *pEvent)
   static bool_t filtered = FALSE;
   static bool_t firstFrag = TRUE;
 
+  DM_TRACE_INFO0("dmExtScanActHciReport");
+
   /* ignore if not scanning */
   if (dmScanCb.scanState == DM_SCAN_STATE_SCANNING)
   {

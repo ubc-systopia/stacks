@@ -353,6 +353,8 @@ static void dmAdvConfig(uint8_t advHandle, uint8_t advType, uint8_t peerAddrType
   uint16_t advEventProp = 0;
   hciExtAdvParam_t extAdvParam;
 
+  DM_TRACE_INFO1("In dmAdvConfig, advType: %d", advType);
+
   memset(&extAdvParam, 0, sizeof(hciExtAdvParam_t));
 
   /* set advertising event properties */
@@ -412,6 +414,7 @@ static void dmAdvConfig(uint8_t advHandle, uint8_t advType, uint8_t peerAddrType
   }
   else
   {
+      DM_TRACE_INFO1("3advEventProp: %d", advEventProp );
     /* use extended advertising PDUs (bit 4 = 0) */
 
     /* extended advertisement cannot be both connectable and scannable */
@@ -421,17 +424,22 @@ static void dmAdvConfig(uint8_t advHandle, uint8_t advType, uint8_t peerAddrType
       advType = DM_EXT_ADV_CONN_UNDIRECT;
     }
 
+    DM_TRACE_INFO1("1advEventProp: %d", advEventProp );
+
     if (DM_ADV_CONNECTABLE(advType))
     {
       /* set bit 0 */
       advEventProp |= HCI_ADV_PROP_CONN_ADV_BIT;
     }
 
+    DM_TRACE_INFO1("2advEventProp: %d", advEventProp );
+
     /* if scannable advertising types */
     if (DM_ADV_SCANNABLE(advType))
     {
       /* set bit 1 */
       advEventProp |= HCI_ADV_PROP_SCAN_ADV_BIT;
+      DM_TRACE_INFO1("4advEventProp: %d", advEventProp );
 
       /* scan data is allowed only with scannable advertising types */
       scanDataAllowed = TRUE;
@@ -441,6 +449,8 @@ static void dmAdvConfig(uint8_t advHandle, uint8_t advType, uint8_t peerAddrType
     {
       advDataAllowed = TRUE;
     }
+
+    DM_TRACE_INFO1("5advEventProp: %d", advEventProp );
 
     /* if directed advertising */
     if (DM_ADV_DIRECTED(advType))
@@ -474,6 +484,8 @@ static void dmAdvConfig(uint8_t advHandle, uint8_t advType, uint8_t peerAddrType
   }
 
   extAdvParam.advEventProp = advEventProp;
+
+  DM_TRACE_INFO1("advEventProp: %d", advEventProp );
 
   /* min and max intervals are not used for high duty cycle connectable directed advertising */
   if ((advEventProp & HCI_ADV_PROP_CONN_DIRECT_ADV_BIT) == 0)
@@ -675,6 +687,8 @@ static void dmAdvStart(uint8_t numSets, uint8_t *pAdvHandles, uint16_t *pDuratio
 
     dmAdvCb.advState[pAdvHandles[i]] = state;
   }
+
+  DM_TRACE_INFO0("Calling enable ext adv");
 
   /* enable advertising */
   HciLeSetExtAdvEnableCmd(TRUE, numSets, enableParam);
@@ -1448,6 +1462,8 @@ void dmPerAdvHciHandler(hciEvt_t *pEvent)
   {
     uint8_t advHandle = dmPerAdvCmdCmplPending();
 
+    DM_TRACE_INFO1("Got pending per adv handle: %d", advHandle);
+
     /* if pending periodic advertising enable command complete */
     if (advHandle < DM_NUM_ADV_SETS)
     {
@@ -1456,6 +1472,7 @@ void dmPerAdvHciHandler(hciEvt_t *pEvent)
       /* copy over event header */
       memcpy(&dmMsg, &pEvent->hdr, sizeof(wsfMsgHdr_t));
 
+      DM_TRACE_INFO1("dmPerAdvCb[advHandle].advState: %d", dmPerAdvCb[advHandle].advState);
       switch (dmPerAdvCb[advHandle].advState)
       {
       case DM_ADV_PER_STATE_STARTING:
@@ -1463,6 +1480,7 @@ void dmPerAdvHciHandler(hciEvt_t *pEvent)
         dmMsg.hdr.event = DM_PER_ADV_SET_START_IND;
         dmPerAdvCb[advHandle].advState = (dmMsg.hdr.status == HCI_SUCCESS) ? \
                                          DM_ADV_PER_STATE_ADVERTISING : DM_ADV_PER_STATE_IDLE;
+        DM_TRACE_INFO1("dmPerAdvCb[advHandle].advState: %d", dmPerAdvCb[advHandle].advState);
         /* call client callback */
         (*dmCb.cback)(&dmMsg);
         break;
@@ -1516,12 +1534,14 @@ void dmPerAdvReset(void)
   dmPerAdvSetStopEvt_t  perAdvSetStop;
   uint8_t               i;
 
+
   /* generate periodic advertising set stopped event */
   perAdvSetStop.hdr.event = DM_PER_ADV_SET_STOP_IND;
   perAdvSetStop.hdr.status = HCI_SUCCESS;
 
   for (i = 0; i < DM_NUM_ADV_SETS; i++)
   {
+    DM_TRACE_INFO1("dmPerAdvReset: dmPerAdvCb[i].advState is %d", dmPerAdvCb[i].advState);
     /* if periodic advertising enabled */
     if ((dmPerAdvCb[i].advState == DM_ADV_PER_STATE_STOPPING) ||
         (dmPerAdvCb[i].advState == DM_ADV_PER_STATE_ADVERTISING))
@@ -1640,6 +1660,8 @@ void DmPerAdvConfig(uint8_t advHandle)
 {
   dmAdvPerApiConfig_t *pMsg;
 
+  DM_TRACE_INFO0("DmPerAdvConfig");
+
   WSF_ASSERT(advHandle < DM_NUM_ADV_SETS);
 
   if ((pMsg = WsfMsgAlloc(sizeof(dmAdvPerApiConfig_t))) != NULL)
@@ -1694,6 +1716,8 @@ void DmPerAdvStart(uint8_t advHandle)
   dmAdvPerApiStart_t *pMsg;
 
   WSF_ASSERT(advHandle < DM_NUM_ADV_SETS);
+
+  DM_TRACE_INFO0("DmPerAdvStart");
 
   if ((pMsg = WsfMsgAlloc(sizeof(dmAdvPerApiStart_t))) != NULL)
   {
@@ -1955,6 +1979,8 @@ uint16_t DmExtMaxAdvDataLen(uint8_t advType, bool_t useLegacyPdu)
 void DmExtAdvInit(void)
 {
   WsfTaskLock();
+
+  DM_TRACE_INFO0("DmExtAdvInit");
 
   /* set function interface table */
   dmFcnIfTbl[DM_ID_ADV] = (dmFcnIf_t *) &dmAdvFcnIf;

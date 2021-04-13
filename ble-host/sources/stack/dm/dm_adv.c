@@ -122,6 +122,8 @@ void DmAdvConfig(uint8_t advHandle, uint8_t advType, uint8_t peerAddrType, uint8
 {
   dmAdvApiConfig_t *pMsg;
 
+  DM_TRACE_INFO0("DmAdvConfig");
+
   WSF_ASSERT(advHandle < DM_NUM_ADV_SETS);
 
   if ((pMsg = WsfMsgAlloc(sizeof(dmAdvApiConfig_t))) != NULL)

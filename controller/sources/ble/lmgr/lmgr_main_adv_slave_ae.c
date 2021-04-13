@@ -122,7 +122,7 @@ void LmgrSendPeriodicAdvEnableCnf(uint8_t handle, uint8_t status)
     .status = status
   };
 
-  LL_TRACE_INFO2("### LlEvent ###  LL_PER_ADV_ENABLE_CNF, handle=%u, status=%u", handle, status);
+  DM_TRACE_INFO2("### LlEvent ###  LL_PER_ADV_ENABLE_CNF, handle=%u, status=%u", handle, status);
 
   LmgrSendEvent((LlEvt_t *)&evt);
 }

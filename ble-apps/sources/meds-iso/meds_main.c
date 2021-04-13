@@ -96,15 +96,15 @@ static const appExtAdvCfg_t medsExtAdvCfg =
 {
   {60000},                  /*! Advertising durations in ms */
   {48},                   /*! Advertising intervals in 0.625 ms units */
-  {100},
-  {0},
-  {0}
+  {100},           /*! Maximum number of extended advertising events Controller will send prior to terminating extended advertising */
+  {0},        /*! Whether to use legacy advertising PDUs with extended advertising. If set to TRUE then length of advertising data cannot exceed 31 octets. */
+  {10}    /*!< Advertising intervals for periodic advertising in 1.25 ms units (7.5 ms to 81.91875 s). */
 };
 
 /*! configurable parameters for slave */
 static const appSlaveCfg_t medsSlaveCfg =
 {
-  1,                                      /*! Maximum connections */
+  0,                                      /*! Maximum connections */
 };
 
 /*! configurable parameters for security */
@@ -304,11 +304,10 @@ static void medsSetup(wsfMsgHdr_t *pMsg)
   /* start advertising; automatically set connectable/discoverable mode and bondable mode */
   // AppAdvStart(APP_MODE_AUTO_INIT);
 
-  AppPerAdvSetData(0, sizeof(medsPerData), (uint8_t *)medsPerData, 31);
-  AppPerAdvSetAdValue(0, DM_ADV_TYPE_LOCAL_NAME, sizeof(medsPerData), (uint8_t *)medsPerData);
+  AppPerAdvSetData(0, sizeof(medsPerData), (uint8_t *)medsPerData, 32);
+ //AppPerAdvSetAdValue(0, DM_ADV_TYPE_SERVICE_DATA, sizeof(medsPerData), (uint8_t *)medsPerData);
 
-  APP_TRACE_INFO0("Calling AppPerAdvStart");
-  // Start periodic advertising?
+  // Start periodic advertising
   AppPerAdvStart(0);
 }
 
@@ -400,9 +399,12 @@ static void medsProcMsg(wsfMsgHdr_t *pMsg)
       uiEvent = APP_UI_ADV_START;
       break;
 
+    case DM_ADV_SET_START_IND:
+      uiEvent = APP_UI_ADV_SET_START_IND;
+      break;
+
     case DM_PER_ADV_SET_START_IND:
       // Start BIG here?
-      AppPerAdvSetAdValue(0, DM_ADV_TYPE_LOCAL_NAME, sizeof(medsPerData), (uint8_t *)medsPerData);
       DmBigStart(0,0,1, 15, 32, 60000, 0);
       uiEvent = APP_UI_PER_ADV_SET_START_IND;
       break;
@@ -477,7 +479,7 @@ void MedsHandlerInit(wsfHandlerId_t handlerId)
 
   /* Set configuration pointers */
   pAppSlaveCfg = (appSlaveCfg_t *) &medsSlaveCfg;
-  pAppAdvCfg = (appAdvCfg_t *) &medsAdvCfg;
+ // pAppAdvCfg = (appAdvCfg_t *) &medsAdvCfg;
   pAppExtAdvCfg = (appExtAdvCfg_t *) &medsExtAdvCfg;
   pAppSecCfg = (appSecCfg_t *) &medsSecCfg;
   pAppUpdateCfg = (appUpdateCfg_t *) &medsUpdateCfg;
@@ -554,14 +556,14 @@ void MedsStart(void)
   SvcDisAddGroup();
 
   /* set advertising and scan response data for discoverable mode */
-  AppAdvSetData(APP_ADV_DATA_DISCOVERABLE, 0, (uint8_t *) medsAdvDataDisc);
-  AppAdvSetAdValue(APP_ADV_DATA_DISCOVERABLE, DM_ADV_TYPE_FLAGS, sizeof(medsAdvDataFlags),
-                   (uint8_t *) medsAdvDataFlags);
-  AppAdvSetData(APP_SCAN_DATA_DISCOVERABLE, sizeof(medsScanDataDisc), (uint8_t *) medsScanDataDisc);
+  // AppAdvSetData(APP_ADV_DATA_DISCOVERABLE, 0, (uint8_t *) medsAdvDataDisc);
+  // AppAdvSetAdValue(APP_ADV_DATA_DISCOVERABLE, DM_ADV_TYPE_FLAGS, sizeof(medsAdvDataFlags),
+  //                  (uint8_t *) medsAdvDataFlags);
+  // AppAdvSetData(APP_SCAN_DATA_DISCOVERABLE, sizeof(medsScanDataDisc), (uint8_t *) medsScanDataDisc);
 
-  /* set advertising and scan response data for connectable mode */
-  AppAdvSetData(APP_ADV_DATA_CONNECTABLE, 0, NULL);
-  AppAdvSetData(APP_SCAN_DATA_CONNECTABLE, 0, NULL);
+  // /* set advertising and scan response data for connectable mode */
+  // AppAdvSetData(APP_ADV_DATA_CONNECTABLE, 0, NULL);
+  // AppAdvSetData(APP_SCAN_DATA_CONNECTABLE, 0, NULL);
 
   /* call profile start function */
   medsCb.pIf->start();

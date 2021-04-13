@@ -690,6 +690,7 @@ static void dmBisMsgHandler(wsfMsgHdr_t *pMsg)
 void DmBigSyncStart(uint8_t bigHandle, uint16_t syncHandle, uint8_t mse, uint16_t bigSyncTimeout,
                     uint8_t numBis, uint8_t *pBis)
 {
+  DM_TRACE_INFO0("DmBigSyncStart");
   dmBisApiBigSyncStart_t  *pMsg;
 
   WSF_ASSERT(bigHandle < DM_BIG_MAX);
@@ -867,6 +868,8 @@ uint8_t DmBigSyncGetSecLevel(uint16_t handle)
 void DmBisMasterInit(void)
 {
   WsfTaskLock();
+
+  DM_TRACE_INFO0("DmBisMasterInit");
 
   dmBigSyncCb_t *pBigSyncCb = dmBigSyncCb;
 

@@ -65,6 +65,7 @@ static appExtSlaveCb_t appExtSlaveCb;
 /*************************************************************************************************/
 static void appSlaveExtAdvStart(uint8_t advHandle, bool_t setAdvParam)
 {
+  DM_TRACE_INFO0("appSlaveExtAdvStart");
   appAdvStart(1, &advHandle, pAppExtAdvCfg->advInterval, pAppExtAdvCfg->advDuration,
               pAppExtAdvCfg->maxEaEvents, setAdvParam);
 }
@@ -80,6 +81,7 @@ static void appSlaveExtAdvStart(uint8_t advHandle, bool_t setAdvParam)
 /*************************************************************************************************/
 static void appSlaveExtAdvTypeChanged(dmEvt_t *pMsg)
 {
+  DM_TRACE_INFO0("appSlaveExtAdvTypeChanged");
   /* clear advertising type changed flag */
   appSlaveCb.advTypeChanged[pMsg->advSetStop.advHandle] = FALSE;
 
@@ -101,6 +103,7 @@ static void appSlaveExtAdvTypeChanged(dmEvt_t *pMsg)
 /*************************************************************************************************/
 static void appSlaveNextExtAdvState(dmEvt_t *pMsg)
 {
+  DM_TRACE_INFO0("appSlaveNextExtAdvState");
   /* if adv hasn't been stopped and all adv/scan data haven't been sent */
   if ((appSlaveCb.advState[pMsg->advSetStop.advHandle] != APP_ADV_STOPPED) &&
       !appSlaveCb.advDataSynced[pMsg->advSetStop.advHandle])
@@ -220,6 +223,8 @@ static void appSetPerAdvDataFrag(uint8_t advHandle)
 /*************************************************************************************************/
 static void appSetPerAdvData(uint8_t advHandle)
 {
+
+  APP_TRACE_INFO1("appSetPerAdvData: advHandle: %d", advHandle);
   /* set periodic advertising data */
   if (appExtSlaveCb.perAdvDataOffset[advHandle] < appExtSlaveCb.perAdvDataLen[advHandle])
   {
@@ -282,6 +287,7 @@ void appPerAdvStart(uint8_t advHandle, uint16_t advInterval)
 /*************************************************************************************************/
 void appPerAdvSetData(uint8_t advHandle, uint16_t len, uint8_t *pData, uint16_t bufLen)
 {
+  APP_TRACE_INFO0("appPerAdvSetData");
   /* store data for location */
   appExtSlaveCb.pPerAdvData[advHandle] = pData;
   appExtSlaveCb.perAdvDataLen[advHandle] = len;
@@ -378,6 +384,7 @@ static bool_t appSlaveExtAdvMode(void)
   /* if DM extended advertising */
   if (DmAdvModeExt())
   {
+    // APP_TRACE_INFO1("AdvMode is extended, advStopCback: %d", appSlaveCb.advStopCback);
     /* if first time since last power-on or reset */
     if (appSlaveCb.advStopCback == NULL)
     {
@@ -469,6 +476,8 @@ void AppExtAdvStart(uint8_t numSets, uint8_t *pAdvHandles, uint8_t mode)
   uint8_t  maxEaEvents[DM_NUM_ADV_SETS] = {0};
 
   WSF_ASSERT(numSets <= DM_NUM_ADV_SETS);
+
+  APP_TRACE_INFO0("AppExtAdvStart");
 
   if (appSlaveExtAdvMode())
   {
@@ -656,6 +665,7 @@ void AppPerAdvSetData(uint8_t advHandle, uint16_t len, uint8_t *pData, uint16_t 
 {
   WSF_ASSERT(advHandle < DM_NUM_ADV_SETS);
 
+  APP_TRACE_INFO0("AppPerAdvSetData");
   if (appSlaveExtAdvMode())
   {
     // set periodic advertising data
@@ -678,6 +688,7 @@ void AppPerAdvStart(uint8_t advHandle)
 
   if (appSlaveExtAdvMode())
   {
+    APP_TRACE_INFO0("AppPerAdvStart, app is in extended mode");
     /* initialize periodic advertising state */
     appExtSlaveCb.perAdvState[advHandle] = APP_ADV_STATE1;
 
