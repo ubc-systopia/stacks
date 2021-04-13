@@ -26,7 +26,7 @@
 #include "wsf_os.h"
 #include "util/bstream.h"
 
-#include "medc/medc_api.h"
+#include "medc-iso/medc_api.h"
 
 #include "hci_handler.h"
 #include "dm_handler.h"
@@ -65,12 +65,18 @@ void StackInitMedc(void)
   handlerId = WsfOsSetNextHandler(DmHandler);
   DmDevVsInit(0);
   DmConnInit();
-  DmScanInit();
+ // DmScanInit();
   DmConnMasterInit();
   DmSecInit();
   DmSecLescInit();
   DmPrivInit();
+  
+  // Isochronous
+  DmExtScanInit();
+  DmBisMasterInit();
+
   DmHandlerInit(handlerId);
+
 
   L2cInit();
   L2cMasterInit();
