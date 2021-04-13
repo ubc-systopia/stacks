@@ -26,6 +26,6 @@ INC_DIRS += \
 	$(ROOT_DIR)/ble-apps/sources
 
 C_FILES += \
-    $(sort $(wildcard $(ROOT_DIR)/ble-apps/sources/medc/*.c)) \
-    $(ROOT_DIR)/ble-apps/build/medc/main.c \
-    $(ROOT_DIR)/ble-apps/build/medc/stack_medc.c
+    $(sort $(wildcard $(ROOT_DIR)/ble-apps/sources/medc-iso/*.c)) \
+    $(ROOT_DIR)/ble-apps/build/medc-iso/main.c \
+    $(ROOT_DIR)/ble-apps/build/medc-iso/stack_medc.c
