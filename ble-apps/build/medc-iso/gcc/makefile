@@ -28,12 +28,13 @@ ROOT_DIR        := ../../../..
 BIN_FILE        := medc.elf
 
 # Options
-DEBUG           := 0
+DEBUG           := 1
 TRACE           := 1
 BT_VER          := 11
 USE_EXACTLE     := 1
 INIT_CENTRAL    := 1
 INIT_ENCRYPTED  := 1
+INIT_OBSERVER   := 1
 
 #--------------------------------------------------------------------------------------------------
 #     Configuration
