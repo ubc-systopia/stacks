@@ -54,7 +54,7 @@
 #include "pal_bb.h"
 #include "pal_cfg.h"
 
-#include "meds/meds_api.h"
+#include "meds-iso/meds_api.h"
 #include "app_ui.h"
 
 #include <string.h>
@@ -145,9 +145,9 @@ int main(void)
 
   PalBbLoadCfg((PalBbCfg_t *)&mainBbRtCfg);
   LlGetDefaultRunTimeCfg(&mainLlRtCfg);
-  #if (BT_VER >= LL_VER_BT_CORE_SPEC_5_0)
+  #if (BT_VER >= LL_VER_BT_CORE_SPEC_5_2)
     /* Set 5.0 requirements. */
-    mainLlRtCfg.btVer = LL_VER_BT_CORE_SPEC_5_0;
+    mainLlRtCfg.btVer = LL_VER_BT_CORE_SPEC_5_2;
   #endif
   PalCfgLoadData(PAL_CFG_ID_LL_PARAM, &mainLlRtCfg.maxAdvSets, sizeof(LlRtCfg_t) - 9);
   #if (BT_VER >= LL_VER_BT_CORE_SPEC_5_0)
