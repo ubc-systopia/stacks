@@ -60,6 +60,7 @@ void HciLeSetAdvSetRandAddrCmd(uint8_t advHandle, const uint8_t *pAddr)
 /*************************************************************************************************/
 void HciLeSetExtAdvParamCmd(uint8_t advHandle, hciExtAdvParam_t *pExtAdvParam)
 {
+  DM_TRACE_INFO0("HciLeSetExtAdvParamCmd");
   LlSetExtAdvParam(advHandle, (LlExtAdvParam_t *)pExtAdvParam);
 }
 
@@ -232,6 +233,7 @@ void HciLeSetPerAdvDataCmd(uint8_t advHandle, uint8_t op, uint8_t len, const uin
 /*************************************************************************************************/
 void HciLeSetPerAdvEnableCmd(uint8_t enable, uint8_t advHandle)
 {
+  DM_TRACE_INFO0("HciLeSetPerAdvEnableCmd");
   LlSetPeriodicAdvEnable(enable, advHandle);
 }
 

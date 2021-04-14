@@ -64,10 +64,10 @@ void StackInitMeds(void)
 
   handlerId = WsfOsSetNextHandler(DmHandler);
   DmDevVsInit(0);
-  DmConnInit();
+  //DmConnInit();
   // DmAdvInit();
   DmExtAdvInit();
-  DmConnSlaveInit();
+  // DmConnSlaveInit();
   DmSecInit();
   DmSecLescInit();
   DmPrivInit();

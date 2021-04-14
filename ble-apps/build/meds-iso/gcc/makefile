@@ -32,7 +32,7 @@ DEBUG           := 0
 TRACE           := 1
 BT_VER          := 11
 USE_EXACTLE     := 1
-INIT_PERIPHERAL := 1
+INIT_BROADCASTER := 1
 INIT_ENCRYPTED  := 1
 
 #--------------------------------------------------------------------------------------------------

@@ -246,6 +246,7 @@ lctrAdvSet_t *lctrFindAdvSet(uint8_t handle)
   {
     lctrAdvSet_t *pAdvSet = &pLctrAdvSetTbl[i];
 
+    DM_TRACE_INFO1("Finding adv set, handle=", pAdvSet->handle);
     if ((pAdvSet->handle == handle) &&
         (pAdvSet->enabled))
     {
@@ -2216,15 +2217,22 @@ void LctrSetPeriodicAdvEnable(uint8_t handle, bool_t enable)
 
   if ((pAdvSet = lctrFindAdvSet(handle)) == NULL)
   {
+    DM_TRACE_INFO0("Sending AdvEnableCnf");
     LmgrSendPeriodicAdvEnableCnf(handle, LL_ERROR_CODE_UNKNOWN_ADV_ID);
     return;
   }
+
+  DM_TRACE_INFO1("advParamReady: %d", pAdvSet->perParam.advParamReady);
+  DM_TRACE_INFO1("enable: %d", enable);
+  DM_TRACE_INFO1("pAdvSet->perAdvData.ready: %d", pAdvSet->perAdvData.ready);
+  DM_TRACE_INFO1("pAdvSet->param.advEventProp: %d", pAdvSet->param.advEventProp);
 
   if ((pAdvSet->perParam.advParamReady == FALSE) ||                                                     /* Periodic advertising parameters shall be set. */
       ((enable == TRUE) && (pAdvSet->perAdvData.ready == FALSE)) ||                                     /* Periodic advertising data shall be complete. */
       (pAdvSet->param.advEventProp & (LL_ADV_EVT_PROP_CONN_ADV_BIT | LL_ADV_EVT_PROP_SCAN_ADV_BIT |     /* Only non-connectable and non-scannable is allowed. */
                                       LL_ADV_EVT_PROP_HIGH_DUTY_ADV_BIT | LL_ADV_EVT_PROP_OMIT_AA_BIT)))/* No high duty cycle, No anonymous advertising. */
   {
+    DM_TRACE_INFO0("Sending PerAdvEnable LL_ERROR_CODE_CMD_DISALLOWED");
     LmgrSendPeriodicAdvEnableCnf(handle, LL_ERROR_CODE_CMD_DISALLOWED);
     return;
   }
