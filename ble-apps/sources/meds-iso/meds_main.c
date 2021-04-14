@@ -94,11 +94,11 @@ static const appAdvCfg_t medsAdvCfg =
 
 static const appExtAdvCfg_t medsExtAdvCfg = 
 {
-  {60000},                  /*! Advertising durations in ms */
+  {0},                  /*! Advertising durations in ms (set to 0 to advertise until stop is called) */
   {48},                   /*! Advertising intervals in 0.625 ms units */
-  {100},           /*! Maximum number of extended advertising events Controller will send prior to terminating extended advertising */
+  {0},           /*! Maximum number of extended advertising events Controller will send prior to terminating extended advertising */
   {0},        /*! Whether to use legacy advertising PDUs with extended advertising. If set to TRUE then length of advertising data cannot exceed 31 octets. */
-  {10}    /*!< Advertising intervals for periodic advertising in 1.25 ms units (7.5 ms to 81.91875 s). */
+  {100}    /*!< Advertising intervals for periodic advertising in 1.25 ms units (7.5 ms to 81.91875 s). */
 };
 
 /*! configurable parameters for slave */
@@ -305,9 +305,12 @@ static void medsSetup(wsfMsgHdr_t *pMsg)
   // AppAdvStart(APP_MODE_AUTO_INIT);
 
   AppPerAdvSetData(0, sizeof(medsPerData), (uint8_t *)medsPerData, 32);
+  AppExtSetAdvType(0, DM_ADV_NONCONN_UNDIRECT);
  //AppPerAdvSetAdValue(0, DM_ADV_TYPE_SERVICE_DATA, sizeof(medsPerData), (uint8_t *)medsPerData);
 
   // Start periodic advertising
+  uint8_t sets[DM_NUM_ADV_SETS] = {0}; 
+  AppExtAdvStart(1, sets, 0);
   AppPerAdvStart(0);
 }
 
@@ -564,6 +567,8 @@ void MedsStart(void)
   // /* set advertising and scan response data for connectable mode */
   // AppAdvSetData(APP_ADV_DATA_CONNECTABLE, 0, NULL);
   // AppAdvSetData(APP_SCAN_DATA_CONNECTABLE, 0, NULL);
+
+ // AppPerAdvSetData(0, sizeof(medsPerData), (uint8_t *)medsPerData, 32);
 
   /* call profile start function */
   medsCb.pIf->start();
