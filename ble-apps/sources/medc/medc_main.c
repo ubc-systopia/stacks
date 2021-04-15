@@ -277,12 +277,7 @@ static void medcDmCback(dmEvt_t *pDmEvt)
 
   if (pDmEvt->hdr.event == DM_SCAN_REPORT_IND)
   {
-    APP_TRACE_INFO0("need to make scan report handler");
     reportLen = pDmEvt->scanReport.len;
-  }
-  if (pDmEvt->hdr.event == DM_EXT_SCAN_REPORT_IND)
-  {
-    APP_TRACE_INFO0("need to make scan report handler");
   }
   else
   {
