@@ -306,11 +306,12 @@ static void medsSetup(wsfMsgHdr_t *pMsg)
 
   AppPerAdvSetData(0, sizeof(medsPerData), (uint8_t *)medsPerData, 32);
   AppExtSetAdvType(0, DM_ADV_NONCONN_UNDIRECT);
+  AppExtAdvSetData(0, APP_ADV_DATA_DISCOVERABLE, sizeof(medsPerData), (uint8_t *)medsPerData, 32);
  //AppPerAdvSetAdValue(0, DM_ADV_TYPE_SERVICE_DATA, sizeof(medsPerData), (uint8_t *)medsPerData);
 
   // Start periodic advertising
   uint8_t sets[DM_NUM_ADV_SETS] = {0}; 
-  AppExtAdvStart(1, sets, 0);
+  AppExtAdvStart(1, sets, APP_MODE_AUTO_INIT);
   AppPerAdvStart(0);
 }
 

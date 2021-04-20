@@ -67,12 +67,12 @@ void StackInitMeds(void)
   //DmConnInit();
   // DmAdvInit();
   DmExtAdvInit();
+  DmBisSlaveInit(); 
   // DmConnSlaveInit();
   DmSecInit();
   DmSecLescInit();
   DmPrivInit();
 
-  DmBisSlaveInit();
 
   DmHandlerInit(handlerId);
 
