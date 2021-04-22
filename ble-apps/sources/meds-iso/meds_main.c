@@ -95,10 +95,10 @@ static const appAdvCfg_t medsAdvCfg =
 static const appExtAdvCfg_t medsExtAdvCfg = 
 {
   {0},                  /*! Advertising durations in ms (set to 0 to advertise until stop is called) */
-  {48},                   /*! Advertising intervals in 0.625 ms units */
+  {96},                   /*! Advertising intervals in 0.625 ms units */
   {0},           /*! Maximum number of extended advertising events Controller will send prior to terminating extended advertising */
   {0},        /*! Whether to use legacy advertising PDUs with extended advertising. If set to TRUE then length of advertising data cannot exceed 31 octets. */
-  {100}    /*!< Advertising intervals for periodic advertising in 1.25 ms units (7.5 ms to 81.91875 s). */
+  {96}    /*!< Advertising intervals for periodic advertising in 1.25 ms units (7.5 ms to 81.91875 s). */
 };
 
 /*! configurable parameters for slave */
@@ -408,7 +408,7 @@ static void medsProcMsg(wsfMsgHdr_t *pMsg)
       break;
 
     case DM_PER_ADV_SET_START_IND:
-      // Start BIG here?
+      // Start BIG here
       DmBigStart(0,0,1, 15, 32, 60000, 0);
       uiEvent = APP_UI_PER_ADV_SET_START_IND;
       break;
