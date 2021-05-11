@@ -5,8 +5,6 @@ Packetcraft protocol software is a collection of embedded stacks implementing th
 
 This repository contains open source release of Packetcraft's software. This is a qualified release and may be used in products. Please consult the [Bluetooth Qualification Process](https://www.bluetooth.com/develop-with-bluetooth/qualification-listing) for further details regarding additional certification requirements.
 
-Systopia Pancast Docs: https://docs.google.com/document/d/1M7Dj1X5D-qneGBPHiZ6l7uv2oiriL5BSkftCeeqVXZ4/edit#heading=h.3icye2gt4fls
-
 Release notes
 -------------
 
